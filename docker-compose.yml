@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  app:
+    container_name: test_app
+    build: ./app
+    networks:
+      - backEnd
+      - frontEnd
+    ports:
+      - "5000:80"
+
+  db:
+    container_name: test_db
+    image: mysql
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - backEnd
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+  
+networks:
+  backEnd:
+    internal: true
+  frontEnd:
+    internal: false
