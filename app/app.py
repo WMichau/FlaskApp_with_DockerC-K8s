@@ -29,25 +29,6 @@ def main():
             return render_template("index.html", rows=rows)
     return render_template("index.html")        
 
-# @app.route('/get_data')
-# def db():
-#     conx = mysql.connect()
-
-#     cursor = conx.cursor(pymysql.cursors.DictCursor)
-#     cursor.execute("SELECT * FROM favorite_colors")
-
-#     rows = cursor.fetchall()
-
-#     print(type(rows))
-
-#     return redirect(url_for('main', rows=rows))
-
-
-
-    # resp = jsonify(rows)
-    # resp.status_code = 200
-
-    # return resp
 @app.route('/insert_data', methods=['POST'])
 def idb():
     if request.method == 'POST':
