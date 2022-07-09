@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, render_template
+from crypt import methods
+from flask import Flask, jsonify, render_template, url_for, redirect, request
 from flaskext.mysql import MySQL
 import pymysql
 
@@ -14,23 +15,53 @@ mysql.init_app(app)
 
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def main():
-    return render_template("index.html")
+    if request.method == "POST":    
+        if request.form['submit_button'] == 'Get from DB':
+            conx = mysql.connect()
 
-@app.route('/db')
-def db():
-    conx = mysql.connect()
+            cursor = conx.cursor(pymysql.cursors.DictCursor)
+            cursor.execute("SELECT * FROM favorite_colors")
 
-    cursor = conx.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("SELECT * FROM favorite_colors")
+            rows = cursor.fetchall()
+            
+            return render_template("index.html", rows=rows)
+    return render_template("index.html")        
 
-    rows = cursor.fetchall()
+# @app.route('/get_data')
+# def db():
+#     conx = mysql.connect()
 
-    resp = jsonify(rows)
-    resp.status_code = 200
+#     cursor = conx.cursor(pymysql.cursors.DictCursor)
+#     cursor.execute("SELECT * FROM favorite_colors")
 
-    return resp
+#     rows = cursor.fetchall()
+
+#     print(type(rows))
+
+#     return redirect(url_for('main', rows=rows))
+
+
+
+    # resp = jsonify(rows)
+    # resp.status_code = 200
+
+    # return resp
+@app.route('/insert_data', methods=['POST'])
+def idb():
+    if request.method == 'POST':
+
+        n = request.form['name']
+        c = request.form['color']
+        
+        conx = mysql.connect()
+
+        cursor = conx.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("INSERT INTO favorite_colors (name, color) VALUES (%s, %s)", (n, c))
+        conx.commit()
+
+    return redirect(url_for("main"))
 
 if __name__ == '__main__':
     app.run()

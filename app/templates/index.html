@@ -10,17 +10,34 @@
   <body>
     <h1>Home Page</h1>
     <p>This is the home page of application.</p>
-    <form action="" method="post">
+    <form action="/insert_data" method="post">
       <input type="text" placeholder="Name" name="name"/>
       <input type="text" placeholder="Color" name="color"/>
-      <input type="submit" value="Post"/>
+      <input type="submit" value="Post to DB"/>
     </form>
-    <form action="" method="get">
-      <div>
+    <form method="post">
         :D
         <br>
-          <input type="submit" value="Get data from DB"/>
-      </div>
+          <input type="submit" name="submit_button" value="Get from DB"/>
+          <br> <br> <br>
+          <table>
+            <tr>
+              <td><b>Name</b></td>
+              <td><b>Color</b></td>
+            </tr>
+            {% for row in rows %}
+              <tr>
+              {% for key, value in row.items() %}
+                {% if key == 'name' %}
+                  <td>{{value}}</td>
+                {% endif %}
+                {% if key == 'color' %}
+                  <td>{{value}}</td>
+                {% endif %}
+              {% endfor %}
+              </tr>
+            {% endfor %}
+          </table>    
     </form>
   </body> 
 </html>
