@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-deployment
+  name: flask
 spec:
   selector:
     matchLabels:
@@ -16,4 +16,4 @@ spec:
           image: docker.io/michu12123/test_app
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 5000
+            - containerPort: 80
