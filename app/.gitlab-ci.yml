@@ -1,0 +1,36 @@
+stages:
+  - build
+  - test
+
+build app:
+  stage: build
+  image: tiangolo/uwsgi-nginx-flask:python3.8-alpine
+  script:
+    - apk --update add bash nano
+    - apk add gcc musl-dev python3-dev libffi-dev openssl-dev
+    - pip install -r ./app/requirements.txt
+    - python3 ./app/app.py &
+#    - ls -la
+  artifacts:
+    paths:
+      - ./app
+
+test art:
+  stage: test
+  dependencies: 
+    - build app
+  script:
+    - find / -type f -iname "index.html"
+
+test app:
+  stage: test
+  image: tiangolo/uwsgi-nginx-flask:python3.8-alpine
+  script:
+    - apk --update add bash nano
+    - apk add gcc musl-dev python3-dev libffi-dev openssl-dev
+    - pip install -r ./app/requirements.txt
+    - python3 ./app/app.py &
+    - sleep 5
+    - curl -v "http://localhost:5000/"
+
+    
